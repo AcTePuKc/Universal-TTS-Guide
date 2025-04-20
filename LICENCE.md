@@ -1,3 +1,5 @@
+[Main README](/Universal-TTS-Guide/)
+---
 Copyright (c) 2025 AcTePuKc
 
 This work (the collection of Markdown guides and associated documentation in the Universal-TTS-Guide repository, hereinafter "the Work") is licensed under the Creative Commons Attribution 4.0 International License.
@@ -5,8 +7,7 @@ This work (the collection of Markdown guides and associated documentation in the
 To view a copy of this license, visit:
 http://creativecommons.org/licenses/by/4.0/
 
------------------------------------------------------------------------
-
+---
 Summary of the CC BY 4.0 License:
 
 You are free to:
