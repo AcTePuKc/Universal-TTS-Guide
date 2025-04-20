@@ -180,10 +180,11 @@ Follow these steps systematically to transform raw audio into a training-ready d
 -   **Goal:** Obtain an accurate text transcript for *every single normalized audio chunk*. The text should represent *exactly* what is spoken in the audio.
 -   **Methods:**
     *   **Automatic Speech Recognition (ASR):** Best for large datasets. Use high-quality ASR models.
-        *   **[OpenAI Whisper](https://github.com/openai/whisper):** Excellent multilingual, open-source option. Runs locally (requires GPU for speed) or via API.
-        *   **Cloud Services:** Google Cloud Speech-to-Text, AWS Transcribe, Azure Speech Service offer robust APIs.
-        *   **Other Models:** Explore Hugging Face for other fine-tuned ASR models specific to your language.
-    *   **Manual Transcription:** Most accurate but very time-consuming. Suitable for small, high-value datasets or for correcting ASR outputs.
+    *   **[OpenAI Whisper](https://github.com/openai/whisper):** Excellent multilingual, open-source option. Runs locally (GPU recommended) or via API. *Note: While powerful for word accuracy, Whisper's punctuation and capitalization may require careful review and correction during the cleaning step.* Various community fine-tuned Whisper models (often found on Hugging Face) may offer improvements.
+    *   **[Google Gemini Models](https://ai.google.dev/) (e.g., via API or AI Studio):** Models like Gemini Pro or Flash can perform audio transcription. Often requires audio to be in specific formats and may perform best on shorter segments (aligning well with the pre-chunking step). Check current API offerings and potential free tiers.
+    *   **Cloud Services:** Google Cloud Speech-to-Text, AWS Transcribe, Azure Speech Service offer robust APIs, often with pay-as-you-go pricing and potentially free tiers initially.
+    *   **Other Models:** Explore [Hugging Face Models](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition) for other open-source or fine-tuned ASR models specific to your language.
+    *   **Manual Transcription:** Most accurate but very time-consuming. Suitable for small, high-value datasets or for *correcting ASR outputs*.
     *   **Existing Transcripts:** If your source audio comes with aligned transcripts (e.g., some audiobooks, broadcast archives), you may need scripts to parse and align them with your chunks.
 -   **Output Format:** Create one `.txt` file for each corresponding `.wav` file in your `normalized_chunks` directory. The filenames must match exactly (e.g., `normalized_chunks/segment_00001.wav` needs `transcripts/segment_00001.txt`).
 -   **Text Cleaning and Normalization:** **This is crucial!**
@@ -311,7 +312,7 @@ Before moving to training setup, rigorously review your prepared dataset using t
 | **Audio Length**        | Are most segments within the desired range (e.g., 2-15s)? Few outliers? | Very short/long segments can destabilize training.       | Re-run chunking with adjusted parameters; manually filter outliers from manifests.      |
 | **Audio Quality**       | Listen to random samples: Low background noise? No music/reverb/echo? | Garbage In, Garbage Out. Model learns the noise.         | Improve source audio; apply noise reduction (carefully!); filter out bad segments.     |
 | **Speaker Consistency** | For single-speaker: Is it always the target voice? No other speakers? | Prevents voice dilution or instability.                    | Manually review/filter segments; check chunking boundaries.                         |
-| **Format & Specs**      | All WAV? **Identical** sampling rate? Mono channels? PCM 16-bit?      | Inconsistencies cause errors or poor performance.        | Re-run conversion/resampling steps (Section 1.1). Verify with tools like `soxi`.      |
+| **Format & Specs** | All WAV? **Identical** sampling rate? Mono channels? PCM 16-bit?      | Inconsistencies cause errors or poor performance. | Re-run conversion/resampling steps (Section 1.1). Batch-verify specs using command-line tools like `ffprobe` or `soxi` (part of the [SoX](http://sox.sourceforge.net/) package). Example: `soxi -r *.wav` to check rates. |
 | **Volume Levels**       | Listen to random samples: Are volumes relatively consistent?          | Drastic volume shifts can hinder learning.               | Re-run normalization (Section 1.3); check normalization parameters.                 |
 | **Transcription Cleanliness** | No timestamps, speaker labels? Fillers handled consistently? Punctuation standard? Numbers/symbols expanded? | Ensures text maps cleanly to speech sounds/prosody.      | Re-run text cleaning scripts; perform manual review and correction.                   |
 | **Manifest Format**     | Correct `path|text|speaker_id` structure? Paths valid? No extra lines? | Parser errors will prevent data loading.                 | Check delimiter (`|`); validate paths relative to training script location; check encoding (UTF-8 preferred). |

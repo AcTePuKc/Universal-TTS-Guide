@@ -44,12 +44,15 @@ This list includes software, libraries, and communities helpful for TTS projects
 
 ### Transcription (ASR):
 
-*   **[OpenAI Whisper](https://github.com/openai/whisper):** High-quality open-source ASR model, supports many languages. Can run locally (GPU recommended) or via API. Various implementations exist (e.g., `whisper-jax` for speed).
+*   **[OpenAI Whisper](https://github.com/openai/whisper):** High-quality open-source ASR model, supports many languages. Good baseline, but punctuation often needs review. Can run locally (GPU recommended) or via API. Various community implementations exist.
+*   **[Google Gemini Models (via API/AI Studio)](https://ai.google.dev/):** Capable models for transcription, often perform well on clear audio, potentially best on pre-chunked segments. Check API/Studio for current capabilities and pricing/free tiers.
 *   **Cloud ASR Services:**
     *   [Google Cloud Speech-to-Text](https://cloud.google.com/speech-to-text)
     *   [AWS Transcribe](https://aws.amazon.com/transcribe/)
     *   [Azure Speech Service](https://azure.microsoft.com/en-us/products/cognitive-services/speech-to-text/)
-*   **[Hugging Face Transformers - ASR Models](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition):** Hub for many pre-trained ASR models, including fine-tuned versions of Whisper and others.
+    *   *Often reliable, pay-as-you-go, may have initial free quotas.*
+*   **[Hugging Face Transformers - ASR Models](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition):** Hub for many pre-trained ASR models, including fine-tuned versions of Whisper and others. Explore models fine-tuned for specific languages or punctuation improvement.
+*   **[ElevenLabs Speech To Text (Scribe)](https://elevenlabs.io/speech-to-text):** *Commercial Service.* Known for very high accuracy in both transcription and punctuation, but is a paid service and can be relatively expensive compared to others. Worth considering if budget allows and maximum out-of-the-box accuracy is required.
 
 ### TTS Frameworks & Codebases (Examples - Check for active forks/successors):
 
