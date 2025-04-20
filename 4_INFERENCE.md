@@ -101,4 +101,4 @@ This section explains how to run the inference process using your trained model.
 
 Now that you can generate speech using your trained model, the next logical step is to organize your model files properly for future use, sharing, or deployment.
 
-**Next Step:** [Packaging and Sharing (`5_PACKAGING_AND_SHARING.md`)](./5_PACKAGING_AND_SHARING.md)
+**Next Step:** [Packaging and Sharing](./5_PACKAGING_AND_SHARING.md)

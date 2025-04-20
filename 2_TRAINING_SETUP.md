@@ -176,4 +176,4 @@ Before launching the training, you need to create a configuration file that tell
 
 With your environment set up and configuration file tailored to your data and goals, you are now ready to start the actual model training process.
 
-**Next Step:** [Model Training (`3_MODEL_TRAINING.md`)](./3_MODEL_TRAINING.md)
+**Next Step:** [Model Training](./3_MODEL_TRAINING.md)

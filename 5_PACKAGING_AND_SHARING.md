@@ -124,4 +124,4 @@ If you plan to share your model:
 
 Properly packaging and documenting your models makes them significantly more valuable and usable, whether for your own future projects or for collaboration and sharing within the community.
 
-**Next Step:** [Troubleshooting and Resources (`6_TROUBLESHOOTING_AND_RESOURCES.md`)](./6_TROUBLESHOOTING_AND_RESOURCES.md)
+**Next Step:** [Troubleshooting and Resources)](./6_TROUBLESHOOTING_AND_RESOURCES.md)

@@ -124,4 +124,4 @@ Fine-tuning leverages a powerful pre-trained model and adapts it to your specifi
 
 With training launched and monitored, the next step, after selecting a good checkpoint, is to use the model for generating speech on new text.
 
-**Next Step:** [Inference (`4_INFERENCE.md`)](./4_INFERENCE.md)
+**Next Step:** [Inference](./4_INFERENCE.md)

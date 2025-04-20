@@ -31,7 +31,39 @@ Follow these steps systematically to transform raw audio into a training-ready d
     ```
     *   `-ar 22050`: Sets the audio sampling rate (samples per second).
 
-### 1.2. Audio Chunking (Splitting into Segments)
+### 1.2 Advanced Audio Cleaning (Noise/Music Removal) - *Optional but Recommended*
+
+-   **Goal:** To remove unwanted background sounds like noise (hum, hiss, fans), music, reverb, or other interfering voices from your source audio, isolating the target speaker's voice as much as possible. This step is crucial if your source audio is not studio quality.
+-   **Why?** TTS models learn from the audio they are given. If the audio contains background noise or music, the resulting TTS voice will likely inherit these characteristics, sounding noisy or "muddy". Cleaner audio leads to a cleaner TTS voice.
+
+-   **Tools & Techniques:**
+    *   **AI Source Separation Tools (Recommended for Music/Voice):** These tools use AI models to separate audio into different stems (vocals, music, drums, bass, other).
+        *   **[Ultimate Vocal Remover (UVR)](https://ultimatevocalremover.com/)**: A popular, free, open-source GUI application that provides access to various state-of-the-art AI separation models. It's excellent for removing background music or isolating dialogue.
+            *   **Models (like those mentioned):** UVR allows you to use different AI models. `MDX-Inst-HQ3` is one such model often good at separating vocals from instruments (hence "Inst"). Other MDX models, Demucs models (like `htdemucs`), and potentially models like Mel-Roformer (if integrated or available standalone) are designed for similar tasks, each with slightly different strengths and weaknesses. Experimentation is key. Choose models focused on **vocal isolation**.
+        *   **Other Tools:** Online services (e.g., Lalal.ai) or other standalone software might use similar underlying models (often Demucs or Spleeter variants).
+    *   **Traditional Noise Reduction Tools:** Often found in Digital Audio Workstations (DAWs) or audio editors.
+        *   **[Audacity](https://www.audacityteam.org/):** Contains built-in noise reduction effects (requires sampling a noise profile). Can be effective for constant background noise (like hiss or hum).
+        *   **Commercial Plugins (e.g., Izotope RX, Waves Clarity):** Offer more sophisticated AI-powered noise, reverb, and voice isolation tools, but come at a cost.
+    *   **Spectral Editing:** Manually removing unwanted sounds in a spectral editor (like Adobe Audition, Izotope RX, Acon Digital Acoustica). Powerful but very time-consuming.
+
+-   **Workflow Considerations:**
+    *   **When to Apply:** It's generally recommended to apply cleaning to your **longer audio files *before* chunking (Step 1.3 below)**. This allows the AI models to work with more context and can be more efficient than processing thousands of small chunks. However, if cleaning introduces too many artifacts on long files, you might try cleaning individual problematic chunks later.
+    *   **Process:**
+        1.  Load your standardized WAV file (from Step 1.1) into the chosen tool (e.g., UVR).
+        2.  Select an appropriate vocal isolation model (e.g., an MDX or Demucs vocal model).
+        3.  Process the audio to generate a "vocals only" track.
+        4.  **Listen Carefully:** Critically evaluate the separated vocal track. Check for:
+            *   **Artifacts:** AI separation can sometimes introduce "watery" sounds, glitches, or parts of the voice being mistakenly removed.
+            *   **Remaining Noise/Music:** How effectively was the unwanted sound removed?
+        5.  **Iterate:** You might need to try different models, adjust settings within the tool, or even apply a secondary noise reduction pass (e.g., using Audacity's noise reduction on the AI-separated vocals) for best results.
+    *   **Save Output:** Save the cleaned vocal track as a new WAV file (e.g., `original_file_cleaned.wav`). Use these cleaned files as the input for the *next* step (Chunking).
+
+-   **Caveats:**
+    *   **Artifacts are Possible:** Aggressive cleaning can degrade the naturalness of the target voice. Aim for a balance between removing noise and preserving voice quality.
+    *   **Computational Cost:** AI separation models can be computationally intensive and may take significant time, especially on long audio files and without a powerful GPU.
+
+
+### 1.3. Audio Chunking (Splitting into Segments)
 
 -   **Goal:** Break long audio files (like chapters of an audiobook or podcast episodes) into shorter, manageable segments. Ideal segment length is typically between **2 to 15 seconds**.
 -   **Why Chunk?**
@@ -90,7 +122,7 @@ Follow these steps systematically to transform raw audio into a training-ready d
     ```
 -   **Review:** Listen to a sample of the generated chunks. Are the splits logical? Is speech cut off? Adjust `min_silence_len` and `silence_thresh` and re-run if necessary. Manually splitting or refining splits in an audio editor (like Audacity) might be needed for tricky audio.
 
-### 1.3. Volume Normalization
+### 1.4. Volume Normalization
 
 -   **Goal:** Ensure all audio chunks have a consistent volume level. This prevents quiet or loud segments from disproportionately affecting training.
 -   **Methods:**
@@ -143,7 +175,7 @@ Follow these steps systematically to transform raw audio into a training-ready d
     ```
     *   **Note:** For LUFS normalization, you'd use a library like `pyloudnorm`, iterating through files similarly.
 
-### 1.4. Transcription: Creating Text Pairs
+### 1.5. Transcription: Creating Text Pairs
 
 -   **Goal:** Obtain an accurate text transcript for *every single normalized audio chunk*. The text should represent *exactly* what is spoken in the audio.
 -   **Methods:**
@@ -175,7 +207,7 @@ Follow these steps systematically to transform raw audio into a training-ready d
         └── ...
     ```
 
-### 1.5. Data Structuring & Manifest File Creation
+### 1.6. Data Structuring & Manifest File Creation
 
 -   **Goal:** Create index files (manifests) that tell the TTS training script where to find the audio files and their corresponding transcriptions.
 -   **Manifest Format:** The most common format is a plain text file where each line represents one audio-text pair, separated by a delimiter (usually a pipe `|`).
@@ -272,7 +304,7 @@ Follow these steps systematically to transform raw audio into a training-ready d
 
 Before moving to training setup, rigorously review your prepared dataset using this checklist. Fixing issues now saves significant time later.
 
-| Aspect                  | Check                                                                 | Why Important?                                             | Action if Failed                                                                      |
+| Aspect                  | Check                                                               | Why Important?                                             | Action if Failed                                                                      |
 | :---------------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- | :------------------------------------------------------------------------------------ |
 | **Audio Completeness**  | Do all listed `.wav` files in manifests actually exist?               | Training will crash if files are missing.                | Re-run manifest generation; check file paths; ensure no files were accidentally deleted. |
 | **Transcript Match**    | Does each `.wav` have a corresponding, accurate `.txt`/transcript?    | Mismatched pairs teach the model incorrect associations. | Verify filenames; review ASR output; manually correct transcripts.                     |
@@ -291,4 +323,4 @@ Before moving to training setup, rigorously review your prepared dataset using t
 
 Once your dataset passes this quality check, you are ready to proceed to setting up the training environment.
 
-**Next Step:** [Training Setup (`2_TRAINING_SETUP.md`)](./2_TRAINING_SETUP.md)
+**Next Step:** [Training Setup](./2_TRAINING_SETUP.md)
