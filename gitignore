@@ -1,0 +1,11 @@
+# Ignore common clutter
+.DS_Store
+Thumbs.db
+node_modules/
+dist/
+*.log
+*.tmp
+*.bak
+.env
+
+_test*
