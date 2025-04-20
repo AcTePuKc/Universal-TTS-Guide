@@ -1,6 +1,6 @@
 # Guide 1: Data Preparation for TTS Training
 
-**Navigation:** [Main README]({{ site.baseurl }}/){: .btn .btn-primary} | [Next Step: Training Setup](./2_TRAINING_SETUP.md){: .btn .btn-primary}
+**Navigation:** [Main README]({{ site.baseurl }}/){: .btn .btn-primary} | [Next Step: Training Setup](./2_TRAINING_SETUP.md){: .btn .btn-primary}|
 This guide covers the critical first phase of any TTS project: preparing high-quality, correctly formatted audio and text data. The quality of your dataset directly impacts the quality of your final TTS model.
 
 ---
