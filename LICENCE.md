@@ -8,7 +8,6 @@ title: License
 {: .btn .btn-primary}
 [Back to Top](#top)
 {: .btn .btn-primary}
-[![GitHub license](https://img.shields.io/github/license/AcTePuKc/Universal-TTS-Guide)](http://creativecommons.org/licenses/by/4.0/)
 --- 
 Copyright (c) 2025 AcTePuKc
 

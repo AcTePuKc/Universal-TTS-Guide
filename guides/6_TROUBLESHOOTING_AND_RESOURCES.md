@@ -36,7 +36,7 @@ This list includes software, libraries, and communities helpful for TTS projects
 
 *   **[Audacity](https://www.audacityteam.org/):** Free, open-source, cross-platform audio editor. Excellent for manual inspection, cleaning, labeling, and basic processing of audio files.
 *   **[FFmpeg](https://ffmpeg.org/):** The swiss-army knife command-line tool for audio/video conversion, resampling, channel manipulation, format changes, and much more. Essential for scripting batch operations.
-*   **[SoX (Sound eXchange)](http://sox.sourceforge.net/):** Command-line utility for audio processing. Useful for effects, format conversion, and getting audio information (`soxi` command).
+*   **[SoX (Sound eXchange Compiled)](http://sox.sourceforge.net/) or [Sox - Source Code](https://codeberg.org/sox_ng/sox_ng/):** Command-line utility for audio processing. Useful for effects, format conversion, and getting audio information (`soxi` command).
 *   **[pydub](https://github.com/jiaaro/pydub):** Python library for easy audio manipulation (slicing, format conversion, volume adjustment, silence detection). Uses ffmpeg/libav backend.
 *   **[librosa](https://librosa.org/doc/latest/index.html):** Python library for advanced audio analysis, feature extraction (like Mel spectrograms), and visualization. Often used internally by TTS frameworks.
 *   **[soundfile](https://python-soundfile.readthedocs.io/en/latest/):** Python library for reading/writing audio files, based on libsndfile. Supports many formats.
