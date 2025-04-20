@@ -1,6 +1,6 @@
 # Guide 6: Troubleshooting and Resources
 
-**Navigation:** [Main README](/Universal-TTS-Guide/) {: .btn .btn-primary} | [Previous Step: Packaging and Sharing](./5_PACKAGING_AND_SHARING.md){: .btn .btn-primary} | 
+**Navigation:** [Main README]({{ site.baseurl }}/){: .btn .btn-primary} | [Previous Step: Packaging and Sharing](./5_PACKAGING_AND_SHARING.md){: .btn .btn-primary} | 
 
 This guide provides solutions for common issues encountered during the TTS data preparation, training, and inference process, along with a list of useful tools and resources.
 
@@ -83,4 +83,4 @@ This list includes software, libraries, and communities helpful for TTS projects
 This concludes the main series of guides. Remember that building good TTS models often involves iteration – revisiting data preparation or adjusting training parameters based on results is common practice. Good luck!
 
 ---
-**Navigation:** [Main README](/Universal-TTS-Guide/) {: .btn .btn-primary} | [Previous Step: Packaging and Sharing](./5_PACKAGING_AND_SHARING.md){: .btn .btn-primary} | [Back to Top](#top) {: .btn .btn-primary}
+**Navigation:** [Main README]({{ site.baseurl }}/){: .btn .btn-primary} | [Previous Step: Packaging and Sharing](./5_PACKAGING_AND_SHARING.md){: .btn .btn-primary} | [Back to Top](#top){: .btn .btn-primary}
