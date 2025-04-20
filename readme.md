@@ -40,22 +40,22 @@ Before collecting data, consider these crucial points to ensure your project is 
 
 This guide is broken down into focused modules. Follow the links below for detailed steps on each phase:
 
-1.  **➡️ [Data Preparation (`1_DATA_PREPARATION.md`)](./1_DATA_PREPARATION.md)**
+1.  **➡️ [Data Preparation](./1_DATA_PREPARATION.md)**
     *   Covers acquiring, cleaning, segmenting, normalizing audio, transcribing text, and creating the necessary manifest files for training. Includes the crucial data quality checklist.
 
-2.  **➡️ [Training Setup (`2_TRAINING_SETUP.md`)](./2_TRAINING_SETUP.md)**
+2.  **➡️ [Training Setup](./2_TRAINING_SETUP.md)**
     *   Guides you through setting up your Python environment, installing dependencies (like PyTorch with CUDA), choosing a TTS framework, and configuring the training parameters in your configuration file.
 
-3.  **➡️ [Model Training (`3_MODEL_TRAINING.md`)](./3_MODEL_TRAINING.md)**
+3.  **➡️ [Model Training](./3_MODEL_TRAINING.md)**
     *   Explains how to launch the training script, monitor its progress (loss, validation), resume interrupted training, and provides specific tips for fine-tuning existing models.
 
-4.  **➡️ [Inference (`4_INFERENCE.md`)](./4_INFERENCE.md)**
+4.  **➡️ [Inference](./4_INFERENCE.md)**
     *   Details how to use your trained model checkpoint to synthesize speech from new text, including single sentence, batch processing, and multi-speaker considerations.
 
-5.  **➡️ [Packaging and Sharing (`5_PACKAGING_AND_SHARING.md`)](./5_PACKAGING_AND_SHARING.md)**
+5.  **➡️ [Packaging and Sharing](./5_PACKAGING_AND_SHARING.md)**
     *   Provides best practices for organizing your trained model files (checkpoints, configs, samples), documenting them with a README, versioning, and preparing them for sharing or archival.
 
-6.  **➡️ [Troubleshooting and Resources (`6_TROUBLESHOOTING_AND_RESOURCES.md`)](./6_TROUBLESHOOTING_AND_RESOURCES.md)**
+6.  **➡️ [Troubleshooting and Resources](./6_TROUBLESHOOTING_AND_RESOURCES.md)** 
     *   Offers solutions for common problems encountered during training and inference, and lists useful external tools, libraries, and communities.
 
 ---

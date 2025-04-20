@@ -1,6 +1,6 @@
 # Guide 6: Troubleshooting and Resources
 
-**Navigation:** [Main README](./README.md) | [Previous Step: Packaging and Sharing (`5_PACKAGING_AND_SHARING.md`)](./5_PACKAGING_AND_SHARING.md)
+**Navigation:** [Main README](/Universal-TTS-Guide/) | [Previous Step: Packaging and Sharing](./5_PACKAGING_AND_SHARING.md)
 
 This guide provides solutions for common issues encountered during the TTS data preparation, training, and inference process, along with a list of useful tools and resources.
 
