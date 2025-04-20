@@ -1,5 +1,15 @@
-[Main README](/Universal-TTS-Guide/)
 ---
+# You can add optional metadata here if your layout uses it
+layout: default # Or whatever layout your theme uses for simple pages
+title: License
+---
+
+[Main README]({{ site.baseurl }}/) 
+{: .btn .btn-primary}
+[Back to Top](#top)
+{: .btn .btn-primary}
+[![GitHub license](https://img.shields.io/github/license/AcTePuKc/Universal-TTS-Guide)](http://creativecommons.org/licenses/by/4.0/)
+--- 
 Copyright (c) 2025 AcTePuKc
 
 This work (the collection of Markdown guides and associated documentation in the Universal-TTS-Guide repository, hereinafter "the Work") is licensed under the Creative Commons Attribution 4.0 International License.
