@@ -1,6 +1,7 @@
 # Guide 5: Packaging and Sharing Your TTS Model
 
-**Navigation:** [Main README](/Universal-TTS-Guide/) | [Previous Step: Inference](./4_INFERENCE.md) | [Next Step: Troubleshooting and Resources](./6_TROUBLESHOOTING_AND_RESOURCES.md)
+**Navigation:** [Main README](/Universal-TTS-Guide/) {: .btn .btn-primary} |  | [Previous Step: Inference](./4_INFERENCE.md){: .btn .btn-primary} |  | [Next Step: Troubleshooting and Resources](./6_TROUBLESHOOTING_AND_RESOURCES.md){: .btn .btn-primary} | 
+
 
 You've trained a model and can generate speech with it. Congratulations! To ensure your model is usable in the future (by yourself or others) and to facilitate reproducibility, proper packaging and documentation are essential.
 
@@ -124,4 +125,5 @@ If you plan to share your model:
 
 Properly packaging and documenting your models makes them significantly more valuable and usable, whether for your own future projects or for collaboration and sharing within the community.
 
-**Next Step:** [Troubleshooting and Resources)](./6_TROUBLESHOOTING_AND_RESOURCES.md)
+**Next Step:** [Troubleshooting and Resources)](./6_TROUBLESHOOTING_AND_RESOURCES.md){: .btn .btn-primary} | 
+[Back to Top](#top){: .btn .btn-primary}

@@ -6,8 +6,7 @@ title: License
 
 [Main README]({{ site.baseurl }}/) 
 {: .btn .btn-primary}
-[Back to Top](#top)
-{: .btn .btn-primary}
+
 --- 
 Copyright (c) 2025 AcTePuKc
 
@@ -48,3 +47,6 @@ No warranties are given. The license may not give you all of the permissions nec
 Disclaimer:
 
 The Work is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the Work or the use or other dealings in the Work.
+---
+[Back to Top](#top)
+{: .btn .btn-primary}

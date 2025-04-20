@@ -1,7 +1,6 @@
 # Guide 1: Data Preparation for TTS Training
 
-**Navigation:** [Main README](/Universal-TTS-Guide/) | [Next Step: Training Setup](./2_TRAINING_SETUP.md)
-
+**Navigation:** [Main README]({{ site.baseurl }}/){: .btn .btn-primary} | [Next Step: Training Setup](./2_TRAINING_SETUP.md){: .btn .btn-primary}
 This guide covers the critical first phase of any TTS project: preparing high-quality, correctly formatted audio and text data. The quality of your dataset directly impacts the quality of your final TTS model.
 
 ---
@@ -324,4 +323,5 @@ Before moving to training setup, rigorously review your prepared dataset using t
 
 Once your dataset passes this quality check, you are ready to proceed to setting up the training environment.
 
-**Next Step:** [Training Setup](./2_TRAINING_SETUP.md)
+**Next Step:** [Training Setup](./2_TRAINING_SETUP.md){: .btn .btn-primary} | 
+[Back to Top](#top){: .btn .btn-primary}

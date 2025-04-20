@@ -1,6 +1,6 @@
 # Guide 2: Training Environment Setup & Configuration
 
-**Navigation:** [Main README](/Universal-TTS-Guide/) | [Previous Step: Data Preparation](./1_DATA_PREPARATION.md) | [Next Step: Model Training](./3_MODEL_TRAINING.md)
+**Navigation:** [Main README]({{ site.baseurl }}/){: .btn .btn-primary} | [Previous Step: Data Preparation](./1_DATA_PREPARATION.md){: .btn .btn-primary} | [Next Step: Model Training](./3_MODEL_TRAINING.md){: .btn .btn-primary}
 
 With your dataset prepared, the next stage involves setting up the necessary software environment and configuring the parameters for your specific training run.
 
@@ -176,4 +176,5 @@ Before launching the training, you need to create a configuration file that tell
 
 With your environment set up and configuration file tailored to your data and goals, you are now ready to start the actual model training process.
 
-**Next Step:** [Model Training](./3_MODEL_TRAINING.md)
+**Next Step:** [Model Training](./3_MODEL_TRAINING.md){: .btn .btn-primary} | 
+[Back to Top](#top){: .btn .btn-primary}

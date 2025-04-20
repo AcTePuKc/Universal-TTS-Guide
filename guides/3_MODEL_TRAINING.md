@@ -1,6 +1,6 @@
 # Guide 3: Model Training & Fine-tuning
 
-**Navigation:** [Main README](/Universal-TTS-Guide/) | [Previous Step: Training Setup](./2_TRAINING_SETUP.md) | [Next Step: Inference](./4_INFERENCE.md)
+**Navigation:** [Main README]({{ site.baseurl }}/){: .btn .btn-primary} | [Previous Step: Training Setup](./2_TRAINING_SETUP.md){: .btn .btn-primary} | [Next Step: Inference](./4_INFERENCE.md){: .btn .btn-primary}
 
 You've prepared your data and configured your training environment. Now it's time to actually train (or fine-tune) your Text-to-Speech model. This phase involves running the training script, monitoring its progress, and understanding how to manage the process.
 
@@ -124,4 +124,5 @@ Fine-tuning leverages a powerful pre-trained model and adapts it to your specifi
 
 With training launched and monitored, the next step, after selecting a good checkpoint, is to use the model for generating speech on new text.
 
-**Next Step:** [Inference](./4_INFERENCE.md)
+**Next Step:** [Inference](./4_INFERENCE.md){: .btn .btn-primary} | 
+[Back to Top](#top){: .btn .btn-primary}

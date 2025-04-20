@@ -1,6 +1,6 @@
 # Guide 4: Inference - Generating Speech with Your Model
 
-**Navigation:** [Main README](/Universal-TTS-Guide/) | [Previous Step: Model Training](./3_MODEL_TRAINING.md) | [Next Step: Packaging and Sharing](./5_PACKAGING_AND_SHARING.md)
+**Navigation:** [Main README]({{ site.baseurl }}/){: .btn .btn-primary} | [Previous Step: Model Training](./3_MODEL_TRAINING.md){: .btn .btn-primary} | [Next Step: Packaging and Sharing](./5_PACKAGING_AND_SHARING.md){: .btn .btn-primary} | 
 
 You have successfully trained or fine-tuned a TTS model and selected a promising checkpoint! Now, let's use that model to convert new text into speech audio – a process called **inference** or **synthesis**.
 
@@ -101,4 +101,5 @@ This section explains how to run the inference process using your trained model.
 
 Now that you can generate speech using your trained model, the next logical step is to organize your model files properly for future use, sharing, or deployment.
 
-**Next Step:** [Packaging and Sharing](./5_PACKAGING_AND_SHARING.md)
+**Next Step:** [Packaging and Sharing](./5_PACKAGING_AND_SHARING.md){: .btn .btn-primary} | 
+[Back to Top](#top){: .btn .btn-primary}
