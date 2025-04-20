@@ -1,6 +1,6 @@
 # Guide 2: Training Environment Setup & Configuration
 
-**Navigation:** [Main README](../README.md) | [Previous Step: Data Preparation (`1_DATA_PREPARATION.md`)](./1_DATA_PREPARATION.md) | [Next Step: Model Training (`3_MODEL_TRAINING.md`)](./3_MODEL_TRAINING.md)
+**Navigation:** [Main README](./README.md) | [Previous Step: Data Preparation (`1_DATA_PREPARATION.md`)](./1_DATA_PREPARATION.md) | [Next Step: Model Training (`3_MODEL_TRAINING.md`)](./3_MODEL_TRAINING.md)
 
 With your dataset prepared, the next stage involves setting up the necessary software environment and configuring the parameters for your specific training run.
 

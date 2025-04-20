@@ -1,6 +1,6 @@
 # Guide 5: Packaging and Sharing Your TTS Model
 
-**Navigation:** [Main README](../README.md) | [Previous Step: Inference (`4_INFERENCE.md`)](./4_INFERENCE.md) | [Next Step: Troubleshooting and Resources (`6_TROUBLESHOOTING_AND_RESOURCES.md`)](./6_TROUBLESHOOTING_AND_RESOURCES.md)
+**Navigation:** [Main README](./README.md) | [Previous Step: Inference (`4_INFERENCE.md`)](./4_INFERENCE.md) | [Next Step: Troubleshooting and Resources (`6_TROUBLESHOOTING_AND_RESOURCES.md`)](./6_TROUBLESHOOTING_AND_RESOURCES.md)
 
 You've trained a model and can generate speech with it. Congratulations! To ensure your model is usable in the future (by yourself or others) and to facilitate reproducibility, proper packaging and documentation are essential.
 
