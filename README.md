@@ -77,5 +77,28 @@ Please feel free to:
 
 We appreciate any effort to make this guide more accurate, comprehensive, and helpful for the community!
 
+## Glossary of Technical Terms
+
+This glossary explains key technical terms used throughout the guides to help newcomers understand the terminology:
+
+- **ASR (Automatic Speech Recognition)**: Technology that converts spoken language into written text; used for transcribing audio data.
+- **Batch Size**: The number of training examples processed together in one forward/backward pass; affects training speed and memory usage.
+- **Checkpoint**: A saved snapshot of a model's weights during or after training, allowing you to resume training or use the model for inference.
+- **CUDA**: NVIDIA's parallel computing platform that enables GPU acceleration for deep learning tasks.
+- **dBFS (Decibels relative to Full Scale)**: A unit of measurement for audio levels in digital systems, where 0 dBFS represents the maximum possible level.
+- **Diffusion Models**: A class of generative models that gradually add and then remove noise from data; some recent TTS systems use this approach.
+- **FFT (Fast Fourier Transform)**: An algorithm that converts time-domain signals to frequency-domain representations; fundamental for audio processing.
+- **Fine-tuning**: The process of taking a pre-trained model and further training it on a smaller, specific dataset to adapt it to a new voice or language.
+- **LUFS (Loudness Units relative to Full Scale)**: A standardized measurement of perceived loudness, more representative of human hearing than peak measurements.
+- **Manifest File**: A text file that lists audio files and their corresponding transcriptions, used to tell the training script where to find the data.
+- **Mel Spectrogram**: A visual representation of audio that approximates human auditory perception by using the mel scale; commonly used as an intermediate representation in TTS systems.
+- **Overfitting**: When a model learns the training data too well, including its noise and outliers, resulting in poor performance on new data.
+- **Sampling Rate**: The number of audio samples per second (measured in Hz); higher rates capture more audio detail but require more storage and processing power.
+- **STFT (Short-Time Fourier Transform)**: A technique that determines the frequency content of local sections of a signal as it changes over time.
+- **TTS (Text-to-Speech)**: Technology that converts written text into spoken voice output.
+- **Validation Loss**: A metric that measures the error of a model on a validation dataset (data not used for training); helps detect overfitting.
+- **VRAM (Video RAM)**: Memory on a graphics card; deep learning models and their intermediate calculations are stored here during training.
+- **Vocoder**: A component in some TTS systems that converts acoustic features (like mel spectrograms) into waveforms (actual audio).
+
 ## [Licence](./LICENCE.md)
 The content in this guide is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You are free to share and adapt the material as long as you provide appropriate credit. The content is also protected under the copyright of 2025 AcTePuKc and any new contributions will be subject to the same license.

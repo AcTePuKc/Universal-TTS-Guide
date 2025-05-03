@@ -93,11 +93,46 @@ This section details how to launch, monitor, and manage the training process.
 
 ---
 
-## 6. Fine-tuning Specifics
+## 6. Fine-tuning vs. Training from Scratch
+
+### 6.1. Choosing Your Approach
+
+When starting a TTS project, one of the most important decisions is whether to fine-tune an existing model or train a new one from scratch. This table helps you decide which approach is best for your specific situation:
+
+| Factor | Fine-tuning | Training from Scratch |
+|:-------|:------------|:----------------------|
+| **Dataset Size** | Works well with smaller datasets (5-20 hours)<br>Can produce good results with as little as 1-2 hours for some voices | Typically requires larger datasets (30+ hours)<br>Less than 20 hours often leads to poor quality |
+| **Voice Similarity** | Best when your target voice is similar to voices in the pre-trained model's training data | Necessary when your target voice is very unique or significantly different from available pre-trained models |
+| **Language** | Works well if fine-tuning within the same language<br>Can work for cross-lingual with careful preparation | Required for languages with no available pre-trained models<br>Better for capturing language-specific phonetics |
+| **Training Time** | Much faster (days instead of weeks)<br>Requires fewer epochs to converge | Significantly longer training time<br>May require 2-5x more epochs |
+| **Hardware Requirements** | Similar GPU requirements but for less time<br>Can often use smaller batch sizes | Needs sustained GPU access for longer periods<br>May benefit more from multi-GPU setups |
+| **Quality Potential** | Can achieve excellent quality quickly<br>May inherit limitations of the base model | Maximum flexibility and potential quality<br>No constraints from previous training |
+| **Stability** | Generally more stable training process<br>Less prone to collapse or non-convergence | More sensitive to hyperparameters<br>Higher risk of training instability |
+
+#### When to Choose Fine-tuning
+
+Fine-tuning is generally recommended when:
+- You have limited data (less than 20 hours)
+- You need faster results
+- Your target voice/language is reasonably similar to available pre-trained models
+- You have limited computational resources
+- You're new to TTS training (fine-tuning is more forgiving)
+
+#### When to Choose Training from Scratch
+
+Training from scratch is better when:
+- You have abundant data (30+ hours)
+- Your target voice is highly unique or has characteristics not represented in pre-trained models
+- You're working with a language that's poorly supported by existing models
+- You need maximum control over all aspects of the model
+- You have access to significant computational resources
+- You're building a foundation model that others will fine-tune
+
+### 6.2. Fine-tuning Specifics
 
 Fine-tuning leverages a powerful pre-trained model and adapts it to your specific dataset (speaker, language, style). It's usually faster and requires less data than training from scratch.
 
-### 6.1. The Goal
+#### The Goal
 
 -   To transfer the general speech synthesis capabilities (like understanding text-to-sound mapping, basic prosody) from the large dataset the base model was trained on, while specializing the voice identity and potentially accent/style to match your smaller, specific dataset.
 

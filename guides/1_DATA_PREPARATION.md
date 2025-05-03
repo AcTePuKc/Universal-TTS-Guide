@@ -320,6 +320,191 @@ Before moving to training setup, rigorously review your prepared dataset using t
 
 **Tip:** Use tools like `soxi` (from SoX) or `ffprobe` to batch-check audio properties (sampling rate, channels, duration). Write small scripts to verify file existence and basic manifest formatting.
 
+### 2.1. Practical Data Verification Tools
+
+Here are practical commands and scripts to help verify your dataset meets the quality requirements:
+
+#### Audio Format and Properties Verification
+
+```bash
+# Check sampling rate of all WAV files (should all be the same, e.g., 22050)
+# Using SoX (install with: apt-get install sox or brew install sox)
+soxi -r normalized_chunks/*.wav | sort | uniq -c
+
+# Check number of channels (should all be 1 for mono)
+soxi -c normalized_chunks/*.wav | sort | uniq -c
+
+# Check bit depth (should typically be 16-bit)
+soxi -b normalized_chunks/*.wav | sort | uniq -c
+
+# Check duration range (helps identify outliers)
+for file in normalized_chunks/*.wav; do
+  duration=$(soxi -D "$file")
+  echo "$file: $duration seconds"
+done | sort -k2 -n
+
+# Alternative using ffprobe (part of ffmpeg)
+for file in normalized_chunks/*.wav; do
+  ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$file"
+done
+```
+
+#### Manifest Validation Script
+
+This Python script helps validate your manifest files to ensure all audio files exist and have corresponding transcripts:
+
+```python
+import os
+import sys
+import wave
+
+def validate_manifest(manifest_path, base_dir="."):
+    """Validate a TTS manifest file for common issues."""
+    print(f"Validating manifest: {manifest_path}")
+    
+    if not os.path.exists(manifest_path):
+        print(f"ERROR: Manifest file not found: {manifest_path}")
+        return False
+    
+    with open(manifest_path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    
+    print(f"Total entries in manifest: {len(lines)}")
+    
+    issues = 0
+    audio_durations = []
+    
+    for i, line in enumerate(lines, 1):
+        line = line.strip()
+        if not line:
+            print(f"WARNING: Line {i} is empty")
+            issues += 1
+            continue
+        
+        parts = line.split('|')
+        if len(parts) < 2:
+            print(f"ERROR: Line {i} doesn't have the expected format (audio_path|text|speaker_id)")
+            issues += 1
+            continue
+        
+        audio_path = parts[0]
+        text = parts[1]
+        
+        # Make path absolute if it's relative
+        if not os.path.isabs(audio_path):
+            audio_path = os.path.join(base_dir, audio_path)
+        
+        # Check if audio file exists
+        if not os.path.exists(audio_path):
+            print(f"ERROR: Audio file not found: {audio_path} (line {i})")
+            issues += 1
+            continue
+        
+        # Check if text is empty
+        if not text.strip():
+            print(f"WARNING: Empty transcript for {audio_path} (line {i})")
+            issues += 1
+        
+        # Check audio duration
+        try:
+            with wave.open(audio_path, 'rb') as wav:
+                frames = wav.getnframes()
+                rate = wav.getframerate()
+                duration = frames / float(rate)
+                audio_durations.append((audio_path, duration))
+        except Exception as e:
+            print(f"ERROR: Cannot read audio file {audio_path}: {e}")
+            issues += 1
+    
+    # Report duration statistics
+    if audio_durations:
+        durations = [d for _, d in audio_durations]
+        avg_duration = sum(durations) / len(durations)
+        min_duration = min(durations)
+        max_duration = max(durations)
+        
+        print(f"\nAudio duration statistics:")
+        print(f"  Average: {avg_duration:.2f} seconds")
+        print(f"  Minimum: {min_duration:.2f} seconds")
+        print(f"  Maximum: {max_duration:.2f} seconds")
+        
+        # Report outliers (very short or very long files)
+        print("\nPotential outliers:")
+        for path, duration in audio_durations:
+            if duration < 1.0:
+                print(f"  Very short audio: {path} ({duration:.2f}s)")
+            elif duration > 15.0:
+                print(f"  Very long audio: {path} ({duration:.2f}s)")
+    
+    print(f"\nValidation complete. Found {issues} issues.")
+    return issues == 0
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python validate_manifest.py path/to/manifest.txt [base_directory]")
+        sys.exit(1)
+    
+    manifest_path = sys.argv[1]
+    base_dir = sys.argv[2] if len(sys.argv) > 2 else "."
+    
+    success = validate_manifest(manifest_path, base_dir)
+    sys.exit(0 if success else 1)
+```
+
+#### Visual Inspection of Audio
+
+While automated checks are helpful, visual inspection of spectrograms can reveal issues that aren't obvious from listening or basic stats:
+
+```python
+import matplotlib.pyplot as plt
+import librosa
+import librosa.display
+import numpy as np
+import os
+import random
+
+def plot_spectrogram(audio_path, output_dir="spectrograms"):
+    """Generate and save a spectrogram visualization of an audio file."""
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Load audio
+    y, sr = librosa.load(audio_path, sr=None)  # Keep original sampling rate
+    
+    # Create figure
+    plt.figure(figsize=(10, 6))
+    
+    # Plot waveform
+    plt.subplot(2, 1, 1)
+    librosa.display.waveshow(y, sr=sr)
+    plt.title(f"Waveform: {os.path.basename(audio_path)}")
+    
+    # Plot spectrogram
+    plt.subplot(2, 1, 2)
+    D = librosa.amplitude_to_db(np.abs(librosa.stft(y)), ref=np.max)
+    librosa.display.specshow(D, sr=sr, x_axis='time', y_axis='log')
+    plt.colorbar(format='%+2.0f dB')
+    plt.title('Log-frequency power spectrogram')
+    
+    # Save figure
+    output_path = os.path.join(output_dir, f"{os.path.splitext(os.path.basename(audio_path))[0]}.png")
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
+    
+    return output_path
+
+# Example usage: Plot spectrograms for 5 random files
+audio_dir = "normalized_chunks"
+audio_files = [os.path.join(audio_dir, f) for f in os.listdir(audio_dir) if f.endswith('.wav')]
+sample_files = random.sample(audio_files, min(5, len(audio_files)))
+
+for audio_file in sample_files:
+    output_path = plot_spectrogram(audio_file)
+    print(f"Generated spectrogram: {output_path}")
+```
+
+These tools will help you systematically verify your dataset quality and identify potential issues before training.
+
 ---
 
 Once your dataset passes this quality check, you are ready to proceed to setting up the training environment.
