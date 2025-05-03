@@ -5,6 +5,7 @@
 - [English](../../README.md) (Original)
 - **Español** (Actual)
 - [Français](../fr/README.md) (Próximamente)
+- [Български](/languages/bg/README.md) (Translated by AcTePuKc)
 
 *¿Quieres contribuir con una traducción? Consulta la [Guía de Traducción](../../README.md#translation-guide).*
 
