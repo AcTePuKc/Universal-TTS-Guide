@@ -5,7 +5,7 @@
 - **English** (Current)
 - [Español](/languages/es/README.md) (Coming Soon)
 - [Français](/languages/fr/README.md) (Coming Soon)
-- [Български](/languages/bg/README.md) (Coming Soon)
+- [Български](/languages/bg/README.md) (Translated by AcTePuKc)
 
 *Want to contribute a translation? See the [Translation Guide](#translation-guide) below.*
 
