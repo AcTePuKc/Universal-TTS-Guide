@@ -59,7 +59,6 @@ This section explains how to run the inference process using your trained model.
     # Example command (script name and arguments may vary):
     python inference_batch.py \
       --config ../checkpoints/my_yoruba_voice_run1/config.yaml \
-      КОНФИГУРАЦИЯ: ../checkpoints/my_yoruba_voice_run1/config.yaml \
       --checkpoint_path ../checkpoints/my_yoruba_voice_run1/best_model.pth \
       --input_file sentences.txt \
       --output_dir ./generated_batch_audio/
@@ -98,6 +97,286 @@ This section explains how to run the inference process using your trained model.
 -   **Quality Issues (Noise, Instability):** If the output quality is poor, revisit Guide 1 (Data Preparation) and Guide 3 (Model Training). It might indicate issues with data quality, insufficient training, or choosing a suboptimal checkpoint.
 
 ---
+
+## 8. Model Evaluation and Deployment
+
+### 8.1. Evaluating TTS Model Quality
+
+While subjective listening tests are the gold standard for TTS evaluation, there are also objective metrics that can help quantify your model's performance:
+
+#### Objective Evaluation Metrics
+
+| Metric | What It Measures | Tools/Implementation | Interpretation |
+|:-------|:-----------------|:---------------------|:---------------|
+| **MOS (Mean Opinion Score)** | Overall perceived quality | Human evaluators rate samples on a 1-5 scale | Higher is better; industry standard but requires human raters |
+| **PESQ (Perceptual Evaluation of Speech Quality)** | Audio quality compared to reference | Available in Python via `pypesq` | Range: -0.5 to 4.5; higher is better |
+| **STOI (Short-Time Objective Intelligibility)** | Speech intelligibility | Available in Python via `pystoi` | Range: 0 to 1; higher is better |
+| **Character/Word Error Rate (CER/WER)** | Intelligibility via ASR | Run ASR on synthesized speech and compare to input text | Lower is better; measures if words are pronounced correctly |
+| **Mel Cepstral Distortion (MCD)** | Spectral distance from reference | Custom implementation using librosa | Lower is better; typically 2-8 for TTS systems |
+| **F0 RMSE** | Pitch accuracy | Custom implementation using librosa | Lower is better; measures pitch contour accuracy |
+| **Voicing Decision Error** | Voiced/unvoiced accuracy | Custom implementation | Lower is better; measures if speech/silence is correctly placed |
+
+#### Practical Evaluation Approach
+
+1. **Prepare Test Set**: Create a set of diverse test sentences not seen during training
+   ```
+   # Example test_sentences.txt
+   This is a simple declarative sentence.
+   Is this an interrogative sentence?
+   Wow! This is an exclamatory sentence!
+   This sentence contains numbers like 123 and symbols like %.
+   This is a much longer sentence that continues for quite some time, testing the model's ability to maintain coherence and proper prosody across longer utterances with multiple clauses and phrases.
+   ```
+
+2. **Generate Samples**: Use your model to synthesize speech for all test sentences
+
+3. **Conduct Listening Tests**: Have multiple listeners rate samples on:
+   - Naturalness (1-5 scale)
+   - Audio quality/artifacts (1-5 scale)
+   - Pronunciation accuracy (1-5 scale)
+   - Speaker similarity (1-5 scale, if cloning a specific voice)
+
+4. **Implement Objective Metrics**: This Python snippet demonstrates how to calculate some basic metrics:
+
+   ```python
+   import numpy as np
+   import librosa
+   from pesq import pesq
+   from pystoi import stoi
+   import torch
+   from transformers import pipeline
+
+   def evaluate_tts_sample(generated_audio_path, reference_audio_path=None, original_text=None):
+       """Evaluate a TTS sample using various metrics."""
+       results = {}
+       
+       # Load generated audio
+       y_gen, sr_gen = librosa.load(generated_audio_path, sr=None)
+       
+       # Basic audio statistics
+       results["duration"] = librosa.get_duration(y=y_gen, sr=sr_gen)
+       results["rms_energy"] = np.sqrt(np.mean(y_gen**2))
+       
+       # If reference audio is available, calculate comparison metrics
+       if reference_audio_path:
+           y_ref, sr_ref = librosa.load(reference_audio_path, sr=sr_gen)  # Match sampling rates
+           
+           # Ensure same length for comparison
+           min_len = min(len(y_gen), len(y_ref))
+           y_gen_trim = y_gen[:min_len]
+           y_ref_trim = y_ref[:min_len]
+           
+           # PESQ (requires 16kHz or 8kHz audio)
+           if sr_gen in [8000, 16000]:
+               try:
+                   results["pesq"] = pesq(sr_gen, y_ref_trim, y_gen_trim, 'wb')
+               except Exception as e:
+                   results["pesq"] = f"Error: {str(e)}"
+           else:
+               results["pesq"] = "Requires 8kHz or 16kHz audio"
+           
+           # STOI
+           try:
+               results["stoi"] = stoi(y_ref_trim, y_gen_trim, sr_gen, extended=False)
+           except Exception as e:
+               results["stoi"] = f"Error: {str(e)}"
+       
+       # If original text is available, perform ASR and calculate WER/CER
+       if original_text:
+           try:
+               # Load ASR model (requires transformers and torch)
+               asr = pipeline("automatic-speech-recognition", model="openai/whisper-small")
+               
+               # Transcribe generated audio
+               transcription = asr(generated_audio_path)["text"].strip().lower()
+               original_text = original_text.strip().lower()
+               
+               results["transcription"] = transcription
+               results["original_text"] = original_text
+               
+               # Simple character error rate calculation
+               def cer(ref, hyp):
+                   ref, hyp = ref.lower(), hyp.lower()
+                   return levenshtein_distance(ref, hyp) / len(ref)
+               
+               def levenshtein_distance(s1, s2):
+                   if len(s1) < len(s2):
+                       return levenshtein_distance(s2, s1)
+                   if len(s2) == 0:
+                       return len(s1)
+                   previous_row = range(len(s2) + 1)
+                   for i, c1 in enumerate(s1):
+                       current_row = [i + 1]
+                       for j, c2 in enumerate(s2):
+                           insertions = previous_row[j + 1] + 1
+                           deletions = current_row[j] + 1
+                           substitutions = previous_row[j] + (c1 != c2)
+                           current_row.append(min(insertions, deletions, substitutions))
+                       previous_row = current_row
+                   return previous_row[-1]
+               
+               results["character_error_rate"] = cer(original_text, transcription)
+           except Exception as e:
+               results["asr_error"] = str(e)
+       
+       return results
+   ```
+
+### 8.2. Deploying TTS Models
+
+Once you've trained and evaluated your model, you might want to deploy it for practical use. Here are some deployment options:
+
+#### Local Deployment Options
+
+1. **Command-line Interface**: The simplest approach is to create a script that wraps the inference code:
+
+   ```python
+   # tts_cli.py
+   import argparse
+   import os
+   import torch
+   
+   # Import your model-specific modules here
+   # from your_tts_framework import load_model, synthesize_text
+   
+   def main():
+       parser = argparse.ArgumentParser(description="Text-to-Speech CLI")
+       parser.add_argument("--text", type=str, required=True, help="Text to synthesize")
+       parser.add_argument("--model", type=str, required=True, help="Path to model checkpoint")
+       parser.add_argument("--config", type=str, required=True, help="Path to model config")
+       parser.add_argument("--output", type=str, default="output.wav", help="Output audio file path")
+       parser.add_argument("--speaker", type=str, default=None, help="Speaker ID for multi-speaker models")
+       args = parser.parse_args()
+       
+       # Load model (implementation depends on your framework)
+       model = load_model(args.model, args.config)
+       
+       # Synthesize speech
+       audio = synthesize_text(model, args.text, speaker_id=args.speaker)
+       
+       # Save audio
+       save_audio(audio, args.output)
+       print(f"Audio saved to {args.output}")
+   
+   if __name__ == "__main__":
+       main()
+   ```
+
+2. **Simple Web UI**: Create a basic web interface using Flask or Gradio:
+
+   ```python
+   # app.py (Flask example)
+   from flask import Flask, request, send_file, render_template
+   import os
+   import torch
+   import uuid
+   
+   # Import your model-specific modules here
+   # from your_tts_framework import load_model, synthesize_text
+   
+   app = Flask(__name__)
+   
+   # Load model at startup (for faster inference)
+   MODEL_PATH = "path/to/best_model.pth"
+   CONFIG_PATH = "path/to/config.yaml"
+   model = load_model(MODEL_PATH, CONFIG_PATH)
+   
+   @app.route('/')
+   def index():
+       return render_template('index.html')
+   
+   @app.route('/synthesize', methods=['POST'])
+   def synthesize():
+       text = request.form['text']
+       speaker_id = request.form.get('speaker_id', None)
+       
+       # Generate unique filename
+       output_file = f"static/audio/{uuid.uuid4()}.wav"
+       os.makedirs(os.path.dirname(output_file), exist_ok=True)
+       
+       # Synthesize speech
+       audio = synthesize_text(model, text, speaker_id=speaker_id)
+       
+       # Save audio
+       save_audio(audio, output_file)
+       
+       return {'audio_path': output_file}
+   
+   if __name__ == '__main__':
+       app.run(host='0.0.0.0', port=5000, debug=True)
+   ```
+
+3. **Gradio Interface** (Even simpler):
+
+   ```python
+   import gradio as gr
+   import torch
+   
+   # Import your model-specific modules here
+   # from your_tts_framework import load_model, synthesize_text
+   
+   # Load model
+   MODEL_PATH = "path/to/best_model.pth"
+   CONFIG_PATH = "path/to/config.yaml"
+   model = load_model(MODEL_PATH, CONFIG_PATH)
+   
+   def tts_function(text, speaker_id=None):
+       # Synthesize speech
+       audio = synthesize_text(model, text, speaker_id=speaker_id)
+       sampling_rate = 22050  # Adjust to your model's rate
+       return (sampling_rate, audio)
+   
+   # Create Gradio interface
+   iface = gr.Interface(
+       fn=tts_function,
+       inputs=[
+           gr.Textbox(lines=3, placeholder="Enter text to synthesize..."),
+           gr.Dropdown(choices=["speaker1", "speaker2"], label="Speaker", visible=True)  # For multi-speaker models
+       ],
+       outputs=gr.Audio(type="numpy"),
+       title="Text-to-Speech Demo",
+       description="Enter text and generate speech using a custom TTS model."
+   )
+   
+   iface.launch(server_name="0.0.0.0", server_port=7860)
+   ```
+
+#### Cloud Deployment Options
+
+For production use, consider these options:
+
+1. **Hugging Face Spaces**: Upload your model to Hugging Face and create a Gradio or Streamlit app
+2. **REST API**: Wrap your model in a FastAPI or Flask application and deploy to cloud services
+3. **Serverless Functions**: For lightweight models, deploy as serverless functions (AWS Lambda, Google Cloud Functions)
+4. **Docker Containers**: Package your model and dependencies in a Docker container for consistent deployment
+
+#### Performance Optimization
+
+To improve inference speed and efficiency:
+
+1. **Model Quantization**: Convert model weights to lower precision (FP16 or INT8)
+   ```python
+   # Example of FP16 conversion with PyTorch
+   model = model.half()  # Convert to FP16
+   ```
+
+2. **Model Pruning**: Remove unnecessary weights to create smaller models
+3. **ONNX Conversion**: Convert PyTorch models to ONNX format for faster inference
+   ```python
+   # Example ONNX export
+   import torch.onnx
+   
+   # Export the model
+   torch.onnx.export(model,               # model being run
+                     dummy_input,         # model input (or a tuple for multiple inputs)
+                     "model.onnx",        # where to save the model
+                     export_params=True,  # store the trained parameter weights inside the model file
+                     opset_version=11,    # the ONNX version to export the model to
+                     do_constant_folding=True)  # optimization
+   ```
+
+4. **Batch Processing**: Process multiple text inputs at once for higher throughput
+5. **Caching**: Cache frequently requested outputs to avoid regeneration
 
 Now that you can generate speech using your trained model, the next logical step is to organize your model files properly for future use, sharing, or deployment.
 

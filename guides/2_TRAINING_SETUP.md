@@ -18,6 +18,24 @@ This section covers installing the required software and organizing your project
     *   **Language Support:** Check if the model/tokenizer handles your target language well.
     *   **Community & Maintenance:** Is the repository actively maintained? Are there community discussions or support channels?
     *   **Pre-trained Models:** Does the framework provide pre-trained models suitable as a starting point for fine-tuning?
+
+#### TTS Architecture Comparison
+
+When selecting a TTS architecture, consider these popular options and their characteristics:
+
+| Architecture | Pros | Cons | Best For | Hardware Requirements |
+|:-------------|:-----|:-----|:---------|:---------------------|
+| **VITS** | • End-to-end (no separate vocoder)<br>• High-quality audio<br>• Fast inference<br>• Good for fine-tuning | • Complex to understand<br>• Can be unstable during training<br>• Requires careful hyperparameter tuning | • Single-speaker voice cloning<br>• Projects needing high-quality output<br>• When you have 5+ hours of data | • Training: 8GB+ VRAM<br>• Inference: 4GB+ VRAM |
+| **StyleTTS2** | • Excellent voice and style control<br>• State-of-the-art quality<br>• Good for emotion/prosody | • Newer, potentially less stable implementations<br>• More complex architecture<br>• Fewer community resources | • Projects requiring style control<br>• Expressive speech synthesis<br>• Multi-speaker with style transfer | • Training: 12GB+ VRAM<br>• Inference: 6GB+ VRAM |
+| **Tacotron2 + HiFi-GAN** | • Well-established, stable<br>• Easier to understand<br>• More tutorials available<br>• Separate components for easier debugging | • Two-stage pipeline (slower)<br>• Generally lower quality than newer models<br>• More prone to attention failures on long text | • Educational projects<br>• When stability is prioritized over quality<br>• Lower resource environments | • Training: 6GB+ VRAM<br>• Inference: 2GB+ VRAM |
+| **FastSpeech2** | • Non-autoregressive (faster inference)<br>• More stable than Tacotron2<br>• Good documentation | • Requires phoneme alignments<br>• More complex preprocessing<br>• Quality not as high as VITS/StyleTTS2 | • Real-time applications<br>• When inference speed is critical<br>• More controlled output | • Training: 8GB+ VRAM<br>• Inference: 2GB+ VRAM |
+| **YourTTS (VITS variant)** | • Multilingual support<br>• Zero-shot voice cloning<br>• Good for language transfer | • Complex training setup<br>• Requires careful data preparation<br>• May need larger datasets | • Multilingual projects<br>• Cross-lingual voice cloning<br>• When language flexibility is needed | • Training: 10GB+ VRAM<br>• Inference: 4GB+ VRAM |
+| **Diffusion-based TTS** | • Highest quality potential<br>• More natural prosody<br>• Better handling of rare words | • Very slow inference<br>• Extremely compute-intensive training<br>• Newer, less established | • Offline generation<br>• When quality trumps speed<br>• Research projects | • Training: 16GB+ VRAM<br>• Inference: 8GB+ VRAM |
+
+**Note on Hardware Requirements:**
+- These are approximate minimums; larger batch sizes or model configurations will require more VRAM
+- Training times vary significantly: VITS/StyleTTS2 typically need more epochs than Tacotron2
+- CPU inference is possible for all models but will be significantly slower
 -   **Clone the Repository:** Once chosen, clone the framework's code repository using Git.
     ```bash
     git clone <URL_OF_YOUR_CHOSEN_TTS_REPO>
