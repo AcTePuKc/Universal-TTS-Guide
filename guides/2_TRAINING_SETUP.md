@@ -36,6 +36,61 @@ When selecting a TTS architecture, consider these popular options and their char
 - These are approximate minimums; larger batch sizes or model configurations will require more VRAM
 - Training times vary significantly: VITS/StyleTTS2 typically need more epochs than Tacotron2
 - CPU inference is possible for all models but will be significantly slower
+
+### 1.3. Detailed Hardware Requirements
+
+Choosing the right hardware is critical for successful TTS model training. Here's a detailed breakdown of requirements for different scenarios:
+
+#### GPU Requirements by Model Type and Dataset Size
+
+| Model Type | Small Dataset (<10h) | Medium Dataset (10-50h) | Large Dataset (>50h) | Recommended GPU Models |
+|:-----------|:---------------------|:------------------------|:---------------------|:-----------------------|
+| **Tacotron2 + HiFi-GAN** | 8GB VRAM | 12GB VRAM | 16GB+ VRAM | RTX 3060, RTX 2080, T4 |
+| **FastSpeech2** | 8GB VRAM | 12GB VRAM | 16GB+ VRAM | RTX 3060, RTX 2080, T4 |
+| **VITS** | 12GB VRAM | 16GB VRAM | 24GB+ VRAM | RTX 3080, RTX 3090, A5000 |
+| **StyleTTS2** | 16GB VRAM | 24GB VRAM | 32GB+ VRAM | RTX 3090, RTX 4090, A100 |
+| **XTTS-v2** | 24GB VRAM | 32GB VRAM | 40GB+ VRAM | RTX 4090, A100, A6000 |
+| **Diffusion-based TTS** | 16GB VRAM | 24GB VRAM | 32GB+ VRAM | RTX 3090, RTX 4090, A100 |
+
+#### CPU and System Memory
+
+| Training Scale | CPU Requirements | System RAM | Storage |
+|:---------------|:-----------------|:-----------|:--------|
+| **Hobby/Personal** | 4+ cores, 2.5GHz+ | 16GB | 50GB SSD |
+| **Research** | 8+ cores, 3.0GHz+ | 32GB | 100GB+ SSD |
+| **Production** | 16+ cores, 3.5GHz+ | 64GB+ | 500GB+ NVMe SSD |
+
+#### Cloud GPU Options and Approximate Costs
+
+| Cloud Provider | GPU Option | VRAM | Approx. Cost/Hour | Best For |
+|:---------------|:-----------|:-----|:------------------|:---------|
+| **Google Colab** | T4/P100 (Free)<br>V100/A100 (Pro) | 16GB<br>16-40GB | Free<br>$10-$15 | Experimentation, small datasets |
+| **Kaggle** | P100/T4 | 16GB | Free (limited hours) | Small-medium datasets |
+| **AWS** | g4dn.xlarge (T4)<br>p3.2xlarge (V100)<br>p4d.24xlarge (A100) | 16GB<br>16GB<br>40GB | $0.50-$0.75<br>$3.00-$3.50<br>$20.00-$32.00 | Any scale, production |
+| **GCP** | n1-standard-8 + T4<br>a2-highgpu-1g (A100) | 16GB<br>40GB | $0.35-$0.50<br>$3.80-$4.50 | Any scale, production |
+| **Azure** | NC6s_v3 (V100)<br>NC24ads_A100_v4 | 16GB<br>80GB | $3.00-$3.50<br>$16.00-$24.00 | Any scale, production |
+| **Lambda Labs** | 1x RTX 3090<br>1x A100 | 24GB<br>40GB | $1.10<br>$1.99 | Research, medium datasets |
+| **Vast.ai** | Various consumer GPUs | 8-24GB | $0.20-$1.00 | Budget-conscious training |
+
+#### Training Time Estimates
+
+| Model | Dataset Size | GPU | Approximate Training Time | Epochs to Convergence |
+|:------|:-------------|:----|:--------------------------|:----------------------|
+| **Tacotron2 + HiFi-GAN** | 10 hours | RTX 3080 | 2-3 days | 50-100K steps |
+| **FastSpeech2** | 10 hours | RTX 3080 | 2-3 days | 150-200K steps |
+| **VITS** | 10 hours | RTX 3090 | 3-5 days | 300-500K steps |
+| **StyleTTS2** | 10 hours | RTX 3090 | 4-7 days | 500-800K steps |
+| **XTTS-v2** | 10 hours | RTX 4090 | 5-10 days | 1M+ steps |
+
+#### Optimization Tips to Reduce Hardware Requirements
+
+1. **Gradient Accumulation**: Simulate larger batch sizes by accumulating gradients over multiple forward/backward passes
+2. **Mixed Precision Training**: Use FP16 instead of FP32 to reduce VRAM usage by up to 50%
+3. **Gradient Checkpointing**: Trade computation for memory by recomputing activations during backward pass
+4. **Model Parallelism**: Split large models across multiple GPUs
+5. **Progressive Training**: Start with smaller models/configurations and gradually increase complexity
+
+These requirements should help you plan your hardware needs based on your specific project goals and budget constraints.
 -   **Clone the Repository:** Once chosen, clone the framework's code repository using Git.
     ```bash
     git clone <URL_OF_YOUR_CHOSEN_TTS_REPO>

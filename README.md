@@ -1,5 +1,13 @@
 # Universal TTS Model Training & Dataset Preparation Guide
 
+## Available Languages
+
+- **English** (Current)
+- [Español](/languages/es/README.md) (Coming Soon)
+- [Français](/languages/fr/README.md) (Coming Soon)
+
+*Want to contribute a translation? See the [Translation Guide](#translation-guide) below.*
+
 ## Introduction
 
 Welcome! This comprehensive guide provides a universal process for preparing your own speech datasets and training a custom Text-to-Speech (TTS) model. Whether you have a small dataset (e.g., 10 hours) or a larger one (100+ hours), these steps will help you organize your data correctly and navigate the training process for most modern TTS frameworks.
@@ -99,6 +107,36 @@ This glossary explains key technical terms used throughout the guides to help ne
 - **Validation Loss**: A metric that measures the error of a model on a validation dataset (data not used for training); helps detect overfitting.
 - **VRAM (Video RAM)**: Memory on a graphics card; deep learning models and their intermediate calculations are stored here during training.
 - **Vocoder**: A component in some TTS systems that converts acoustic features (like mel spectrograms) into waveforms (actual audio).
+
+## Translation Guide
+
+We welcome translations of this guide to make it accessible to a wider audience. If you'd like to contribute a translation, please follow these steps:
+
+1. **Fork the repository** to your own GitHub account
+2. **Create the necessary directory structure** for your language:
+   ```
+   languages/[language_code]/
+   ├── README.md
+   └── guides/
+       ├── 1_DATA_PREPARATION.md
+       ├── 2_TRAINING_SETUP.md
+       └── ... (all guide files)
+   ```
+   Where `[language_code]` is the ISO 639-1 two-letter code for your language (e.g., `es` for Spanish)
+
+3. **Translate the content** starting with the README.md and then the individual guide files
+   - Maintain the same file structure and Markdown formatting
+   - Keep all code examples unchanged (they should remain in English)
+   - Translate all explanatory text, headers, and comments
+
+4. **Update navigation links** to point to the correct files within your language directory
+
+5. **Submit a Pull Request** with your translation
+
+**Important Notes for Translators:**
+- Technical terms can be challenging to translate. When in doubt, you can keep the English term followed by a brief explanation in your language.
+- Try to maintain the same tone and level of technical detail as the original.
+- If you find errors or areas for improvement in the original English content while translating, please open a separate issue to address them.
 
 ## [Licence](./LICENCE.md)
 The content in this guide is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You are free to share and adapt the material as long as you provide appropriate credit. The content is also protected under the copyright of 2025 AcTePuKc and any new contributions will be subject to the same license.
