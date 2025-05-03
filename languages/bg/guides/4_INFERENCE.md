@@ -1,6 +1,6 @@
 # Ръководство 4: Извеждане с TTS модел
 
-**Навигация:** [Главно README]({{ site.baseurl }}/languages/bg/){: .btn .btn-primary} | [Предишна стъпка: Обучение на модела](./3_MODEL_TRAINING.md){: .btn .btn-primary} | 
+**Навигация:** [Главно README]({{ site.baseurl }}/languages/bg/){: .btn .btn-primary} | [Предишна стъпка: Обучение на модела](./3_MODEL_TRAINING.md){: .btn .btn-primary} |  |[Следваща стъпка: Пакетиране и споделяне на вашия TTS модел](./5_PACKAGING_AND_SHARING.md){: .btn .btn-primary} |
 
 Това ръководство обхваща как да използвате вашия обучен TTS модел за синтезиране на реч от нов текст.
 
