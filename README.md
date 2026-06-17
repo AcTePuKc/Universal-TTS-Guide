@@ -3,8 +3,9 @@
 ## Available Languages
 
 - **English** (Current)
-- [Español](/languages/es/README.md) (Coming Soon)
-- [Français](/languages/fr/README.md) (Coming Soon)
+- [Español](/languages/es/README.md)
+- [Français](/languages/fr/README.md)
+- [Italiano](/languages/it/README.md)
 - [Български](/languages/bg/README.md) (Translated by AcTePuKc)
 
 *Want to contribute a translation? See the [Translation Guide](#translation-guide) below.*
