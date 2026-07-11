@@ -3,10 +3,6 @@ document$.subscribe(function () {
     return;
   }
 
-  if (window.location.protocol === "file:") {
-    return;
-  }
-
   mermaid.initialize({
     startOnLoad: false,
     securityLevel: "loose",

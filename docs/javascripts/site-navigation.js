@@ -105,11 +105,11 @@
     if (tabs.length < 5) return;
 
     const paths = [
-      "index.html",
-      "guides/1-data-preparation/index.html",
-      "glossary/index.html",
-      "contributing-translations/index.html",
-      "licence/index.html"
+      "",
+      "guides/1-data-preparation/",
+      "glossary/",
+      "contributing-translations/",
+      "licence/"
     ];
 
     Array.from(tabs).slice(0, 5).forEach((tab, index) => {
@@ -135,9 +135,9 @@
 
     const languagePrefix = language.segment ? `${language.segment}/` : "";
     const utilityPaths = [
-      "glossary/index.html",
-      "contributing-translations/index.html",
-      "licence/index.html"
+      "glossary/",
+      "contributing-translations/",
+      "licence/"
     ];
     const items = [];
 
@@ -152,7 +152,7 @@
       return item;
     }
 
-    items.push(linkItem(topNavigation[language.code][0], "index.html", !pagePath));
+    items.push(linkItem(topNavigation[language.code][0], "", !pagePath));
 
     const guideItem = document.createElement("li");
     guideItem.className = "md-nav__item md-nav__item--nested";
@@ -229,6 +229,8 @@
     rewritePrimaryNavigation();
     addSectionNavigation();
     document.body.classList.add("site-navigation-ready");
+    window.setTimeout(rewriteTopNavigation, 0);
+    window.setTimeout(rewriteTopNavigation, 250);
     window.setTimeout(rewritePrimaryNavigation, 0);
     window.setTimeout(rewritePrimaryNavigation, 250);
   }
