@@ -1,0 +1,291 @@
+# TTS Training Setup Guide
+
+
+With your dataset prepared, the next stage is setting up the software environment and configuration needed for custom TTS model training or fine-tuning.
+
+If a hardware or training term feels unclear while you read, use the [glossary](../glossary.md#glossary-of-technical-terms). This page only stops to explain terms that directly affect setup decisions.
+
+---
+
+## Training Environment Setup
+
+This section covers installing the required software and organizing your project files.
+
+### Choose and Clone a TTS Framework
+
+If you are a beginner, pick a framework that is actively maintained, has clear setup instructions, and already supports the kind of training you want to do. Do not optimize for "most advanced architecture" first. Optimize for "I can install it, run it, and debug it."
+
+-   **Select a Framework:** Choose a TTS codebase suitable for your goals. Consider factors like:
+    *   **Architecture:** VITS, StyleTTS2, Tacotron2+Vocoder, etc. Newer architectures often yield better quality.
+    *   **Fine-tuning Support:** Does the framework explicitly support fine-tuning from pre-trained models? This is often easier than training from scratch.
+    *   **Language Support:** Check if the model/tokenizer handles your target language well.
+    *   **Community & Maintenance:** Is the repository actively maintained? Are there community discussions or support channels?
+    *   **Pre-trained Models:** Does the framework provide pre-trained models suitable as a starting point for fine-tuning?
+
+### TTS Architecture Comparison
+
+When selecting a TTS architecture, consider these popular options and their characteristics:
+
+| Architecture | Pros | Cons | Best For | Hardware Requirements |
+|:-------------|:-----|:-----|:---------|:---------------------|
+| **VITS** | • End-to-end (no separate vocoder)<br>• High-quality audio<br>• Fast inference<br>• Good for fine-tuning | • Complex to understand<br>• Can be unstable during training<br>• Requires careful hyperparameter tuning | • Single-speaker voice cloning<br>• Projects needing high-quality output<br>• When you have 5+ hours of data | • Training: 8GB+ [VRAM](../glossary.md#glossary-vram)<br>• Inference: 4GB+ VRAM |
+| **StyleTTS2** | • Excellent voice and style control<br>• State-of-the-art quality<br>• Good for emotion/prosody | • Newer, potentially less stable implementations<br>• More complex architecture<br>• Fewer community resources | • Projects requiring style control<br>• Expressive speech synthesis<br>• Multi-speaker with style transfer | • Training: 12GB+ VRAM<br>• Inference: 6GB+ VRAM |
+| **Tacotron2 + HiFi-GAN** | • Well-established, stable<br>• Easier to understand<br>• More tutorials available<br>• Separate components for easier debugging | • Two-stage pipeline (slower)<br>• Generally lower quality than newer models<br>• More prone to attention failures on long text | • Educational projects<br>• When stability is prioritized over quality<br>• Lower resource environments | • Training: 6GB+ VRAM<br>• Inference: 2GB+ VRAM |
+| **FastSpeech2** | • Non-autoregressive (faster inference)<br>• More stable than Tacotron2<br>• Good documentation | • Requires phoneme alignments<br>• More complex preprocessing<br>• Quality not as high as VITS/StyleTTS2 | • Real-time applications<br>• When inference speed is critical<br>• More controlled output | • Training: 8GB+ VRAM<br>• Inference: 2GB+ VRAM |
+| **YourTTS (VITS variant)** | • Multilingual support<br>• Zero-shot voice cloning<br>• Good for language transfer | • Complex training setup<br>• Requires careful data preparation<br>• May need larger datasets | • Multilingual projects<br>• Cross-lingual voice cloning<br>• When language flexibility is needed | • Training: 10GB+ VRAM<br>• Inference: 4GB+ VRAM |
+| **Diffusion-based TTS** | • Highest quality potential<br>• More natural prosody<br>• Better handling of rare words | • Very slow inference<br>• Extremely compute-intensive training<br>• Newer, less established | • Offline generation<br>• When quality trumps speed<br>• Research projects | • Training: 16GB+ VRAM<br>• Inference: 8GB+ VRAM |
+
+**Note on Hardware Requirements:**
+- These are approximate minimums; larger batch sizes or model configurations will require more VRAM
+- Training times vary significantly: VITS/StyleTTS2 typically need more epochs than Tacotron2
+- CPU inference is possible for all models but will be significantly slower
+
+**Practical shortcut:** if you are choosing a first framework for a real project rather than benchmarking architectures, pick the one with the clearest installation docs, the most active issue tracker, and an existing fine-tuning example closest to your use case.
+
+### Hardware Requirements by Project Scale
+
+Choosing the right hardware is critical for successful TTS model training. Here's a detailed breakdown of requirements for different scenarios:
+
+#### GPU Requirements by Model Type and Dataset Size
+
+| Model Type | Small Dataset (<10h) | Medium Dataset (10-50h) | Large Dataset (>50h) | Recommended GPU Models |
+|:-----------|:---------------------|:------------------------|:---------------------|:-----------------------|
+| **Tacotron2 + HiFi-GAN** | 8GB VRAM | 12GB VRAM | 16GB+ VRAM | RTX 3060, RTX 2080, T4 |
+| **FastSpeech2** | 8GB VRAM | 12GB VRAM | 16GB+ VRAM | RTX 3060, RTX 2080, T4 |
+| **VITS** | 12GB VRAM | 16GB VRAM | 24GB+ VRAM | RTX 3080, RTX 3090, A5000 |
+| **StyleTTS2** | 16GB VRAM | 24GB VRAM | 32GB+ VRAM | RTX 3090, RTX 4090, A100 |
+| **XTTS-v2** | 24GB VRAM | 32GB VRAM | 40GB+ VRAM | RTX 4090, A100, A6000 |
+| **Diffusion-based TTS** | 16GB VRAM | 24GB VRAM | 32GB+ VRAM | RTX 3090, RTX 4090, A100 |
+
+#### CPU and System Memory
+
+| Training Scale | CPU Requirements | System RAM | Storage |
+|:---------------|:-----------------|:-----------|:--------|
+| **Hobby/Personal** | 4+ cores, 2.5GHz+ | 16GB | 50GB SSD |
+| **Research** | 8+ cores, 3.0GHz+ | 32GB | 100GB+ SSD |
+| **Production** | 16+ cores, 3.5GHz+ | 64GB+ | 500GB+ NVMe SSD |
+
+#### Indicative Cloud GPU Options*
+
+***Time-sensitive note:** The providers and GPU examples below reflect the cloud landscape when this guide was written. Cloud offerings, availability, and pricing change frequently based on region, discounts, and spot pricing. Use the table only as a rough positioning guide, and verify current options and pricing on the provider's site before budgeting a training run.
+
+| Cloud Provider | GPU Option | VRAM | Relative Cost | Best For |
+|:---------------|:-----------|:-----|:--------------|:---------|
+| **Google Colab** | T4/P100 (free tiers may vary)<br>V100/A100 (paid tiers may vary) | 16GB<br>16-40GB | Low to Medium | Experimentation, small datasets |
+| **Kaggle** | P100/T4 | 16GB | Low | Small-medium datasets |
+| **AWS** | g4dn.xlarge (T4)<br>p3.2xlarge (V100)<br>p4d.24xlarge (A100) | 16GB<br>16GB<br>40GB | Medium to Very High | Any scale, production |
+| **GCP** | T4 instances<br>A100 instances | 16GB<br>40GB | Medium to Very High | Any scale, production |
+| **Azure** | V100 or A100-class instances | 16GB+ | Medium to Very High | Any scale, production |
+| **Lambda Labs** | 1x RTX 3090<br>1x A100 | 24GB<br>40GB | Medium | Research, medium datasets |
+| **Vast.ai** | Various consumer GPUs | 8-24GB | Low to Medium | Budget-conscious training |
+
+#### Very Rough Training Time Ranges
+
+**Time estimate note:** These ranges vary heavily with implementation details, batch size, dataset cleanliness, tokenizer setup, checkpoint quality, and whether you are fine-tuning or training from scratch. Treat them as order-of-magnitude expectations, not project plans.
+
+| Model | Dataset Size | GPU | Approximate Training Time | Epochs to Convergence |
+|:------|:-------------|:----|:--------------------------|:----------------------|
+| **Tacotron2 + HiFi-GAN** | 10 hours | RTX 3080 | 2-3 days | 50-100K steps |
+| **FastSpeech2** | 10 hours | RTX 3080 | 2-3 days | 150-200K steps |
+| **VITS** | 10 hours | RTX 3090 | 3-5 days | 300-500K steps |
+| **StyleTTS2** | 10 hours | RTX 3090 | 4-7 days | 500-800K steps |
+| **XTTS-v2** | 10 hours | RTX 4090 | 5-10 days | 1M+ steps |
+
+#### Optimization Tips to Reduce Hardware Requirements
+
+1. **Gradient Accumulation**: Simulate larger batch sizes by accumulating gradients over multiple forward/backward passes
+2. **Mixed Precision Training**: Use FP16 instead of FP32 to reduce VRAM usage by up to 50%
+3. **Gradient Checkpointing**: Trade computation for memory by recomputing activations during backward pass
+4. **Model Parallelism**: Split large models across multiple GPUs
+5. **Progressive Training**: Start with smaller models/configurations and gradually increase complexity
+
+These requirements should help you plan your hardware needs based on your specific project goals and budget constraints.
+-   **Clone the Repository:** Once chosen, clone the framework's code repository using Git.
+    ```bash
+    git clone <URL_OF_YOUR_CHOSEN_TTS_REPO>
+    cd <TTS_REPO_DIRECTORY> # Navigate into the cloned directory
+    ```
+    *   Example: `git clone https://github.com/some-user/some-tts-framework.git`
+
+### Set Up Python Environment & Install Dependencies
+
+-   **Virtual Environment (Recommended):** Create and activate a dedicated Python virtual environment to isolate dependencies and avoid conflicts with other projects or system Python packages.
+    *   **Using `venv` (built-in):**
+        ```bash
+        python -m venv venv_tts  # Create environment named 'venv_tts'
+        # Activate it:
+        # Windows: .\venv_tts\Scripts\activate
+        # Linux/macOS: source venv_tts/bin/activate
+        ```
+    *   **Using `conda`:**
+        ```bash
+        conda create --name tts_env python=3.9 # Or desired Python version
+        conda activate tts_env
+        ```
+-   **Install PyTorch with [CUDA](../glossary.md#glossary-cuda):** This is critical for GPU acceleration. Visit the [Official PyTorch Installation Guide](https://pytorch.org/get-started/locally/) and select the options matching your OS, package manager (`pip` or `conda`), compute platform (CUDA version), and desired PyTorch version. **Ensure your installed NVIDIA drivers are compatible with the chosen CUDA version.**
+    ```bash
+    # Example command using pip for CUDA 11.8 (check PyTorch website for current commands!)
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    # Verify installation:
+    python -c "import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.version.cuda)"
+    # Should output PyTorch version, True, and your CUDA version if successful.
+    ```
+-   **Install Framework Requirements:** Most frameworks list their dependencies in a `requirements.txt` file. Install them using `pip` (or `uv`, which is often faster).
+    ```bash
+    # Navigate to the framework's directory first if you aren't already there
+    # Using pip:
+    pip install -r requirements.txt
+
+    # Using uv (if installed: pip install uv):
+    uv pip install -r requirements.txt
+    ```
+    *   **Troubleshooting:** Pay attention to any installation errors. They might indicate missing system libraries (like `libsndfile`), incompatible package versions, or issues with your CUDA/PyTorch setup. Check the framework's documentation for specific prerequisites.
+
+#### Minimal Environment Sanity Test
+
+Before editing a large config or starting a long training run, confirm these basic commands work:
+
+```bash
+python --version
+ffmpeg -version
+python -c "import torch; print(torch.cuda.is_available())"
+python -c "import torch; print(torch.__version__)"
+```
+
+If any of those fail, stop and fix the environment first. It is much cheaper than debugging a broken training run later.
+
+### Organize Your Project Folder
+
+-   A well-organized folder structure makes managing your project easier. Place your prepared dataset (or create a symbolic link to it) within or alongside the framework's code. A common structure looks like this:
+
+    ```mermaid
+    flowchart TD
+        root["Project Root"] --> repo["TTS Repo Directory"]
+        repo --> scripts["Core scripts"]
+        scripts --> train["train.py"]
+        scripts --> inference["inference.py"]
+        repo --> config["configs/base_config.yaml"]
+        repo --> requirements["requirements.txt"]
+        repo --> repoMore["other framework files"]
+    ```
+
+    ```mermaid
+    flowchart TD
+        root["Project Root"] --> dataset["my_tts_dataset"]
+        dataset --> audio["normalized_chunks"]
+        audio --> wav1["segment_00001.wav"]
+        audio --> wavMore["more .wav files"]
+        dataset --> transcripts["transcripts (optional)"]
+        dataset --> trainList["train_list.txt"]
+        dataset --> valList["val_list.txt"]
+    ```
+
+    ```mermaid
+    flowchart TD
+        root["Project Root"] --> checkpoints["checkpoints"]
+        checkpoints --> runDir["my_custom_model"]
+        root --> configs["my_configs"]
+        configs --> trainingConfig["my_training_run_config.yaml"]
+    ```
+-   **Paths:** Ensure the paths specified later in your configuration file (for datasets, outputs) are correct relative to where you will *run* the `train.py` script (usually from within the `<TTS_REPO_DIRECTORY>`).
+
+---
+
+## Configuring the Training Run
+
+Before launching the training, you need to create a configuration file that tells the framework *how* to train the model, using *your* specific data.
+
+### 1. Find and Copy a Base Configuration
+
+-   **Locate Examples:** Explore the `configs/` directory within the TTS framework. Look for configuration files (`.yaml`, `.json`, or similar) that serve as templates.
+-   **Choose Appropriately:** Select a config file that matches your goal:
+    *   **Fine-tuning:** Look for names like `config_ft.yaml`, `finetune_*.yaml`. These often assume you'll provide a pre-trained model.
+    *   **Training from Scratch:** Look for names like `config_base.yaml`, `train_*.yaml`.
+    *   **Dataset Size:** Some frameworks might offer configs tuned for small (`_sm`) or large (`_lg`) datasets.
+-   **Copy and Rename:** Copy the chosen template file to a new location (e.g., your own `my_configs/` directory or within the framework's `configs/` directory) and give it a descriptive name for your specific run (e.g., `my_yoruba_voice_ft_config.yaml`).
+    ```bash
+    # Example on Linux/macOS: copying a fine-tuning config
+    cp <TTS_REPO_DIRECTORY>/configs/base_finetune_config.yaml my_configs/my_yoruba_voice_ft_config.yaml
+    ```
+    On Windows PowerShell, use `Copy-Item` instead of `cp` if you are not working in Git Bash.
+
+**Beginner advice:** start from the closest working example the framework already ships. Avoid building a config from scratch for your first run.
+
+### 2. Edit Your Custom Configuration File
+
+-   Open your newly copied configuration file (`my_yoruba_voice_ft_config.yaml`) in a text editor.
+-   **Modify Key Parameters:** Carefully review and modify the parameters. Parameter names **will vary significantly** between frameworks, but common categories include:
+
+    ```yaml
+    # --- Dataset & Data Loading ---
+    # Paths relative to where you run train.py
+    train_filelist_path: "../my_tts_dataset/train_list.txt" # Path to your training manifest
+    val_filelist_path: "../my_tts_dataset/val_list.txt"   # Path to your validation manifest
+    # Some frameworks might need 'data_path' or 'audio_root' pointing to the audio directory instead/additionally.
+
+    # --- Output & Logging ---
+    output_directory: "../checkpoints/my_yoruba_voice_run1" # VERY IMPORTANT: Where models, logs, samples are saved. Create this base dir if needed.
+    log_interval: 100                  # How often (in steps/batches) to print logs
+    validation_interval: 1000          # How often (in steps/batches) to run validation
+    save_checkpoint_interval: 5000     # How often (in steps/batches) to save model checkpoints
+
+    # --- Core Training Hyperparameters ---
+    epochs: 1000                       # Total number of passes over the training data. Adjust based on dataset size and convergence.
+    batch_size: 16                     # Number of samples processed in parallel per GPU. DECREASE if you get CUDA OOM errors. INCREASE for faster training if VRAM allows.
+    learning_rate: 1e-4                # Initial learning rate. May need tuning (e.g., lower for fine-tuning: 5e-5 or 1e-5).
+    # lr_scheduler: "cosine_decay"     # Learning rate schedule (e.g., step decay, exponential decay) - framework dependent
+    # weight_decay: 0.01               # Regularization parameter
+
+    # --- Audio Parameters ---
+    sampling_rate: 22050               # CRITICAL: MUST match the sampling rate of your prepared dataset (from Guide 1).
+    # Other audio params (often depend on model architecture):
+    # filter_length: 1024              # FFT size for STFT
+    # hop_length: 256                  # Hop size for STFT
+    # win_length: 1024                 # Window size for STFT
+    # n_mel_channels: 80               # Number of Mel bands
+    # mel_fmin: 0.0                    # Minimum Mel frequency
+    # mel_fmax: 8000.0                 # Maximum Mel frequency (often sampling_rate / 2)
+
+    # --- Model Architecture ---
+    # model_type: "VITS"               # Type of model architecture
+    # hidden_channels: 192             # Size of internal layers
+    # num_speakers: 1                  # Set to >1 for multi-speaker datasets (must match data prep)
+
+    # --- Fine-tuning Specifics (If Applicable) ---
+    # Set 'True' or provide path when fine-tuning
+    fine_tuning: True
+    pretrained_model_path: "/path/to/downloaded/base_model.pth" # Path to the pre-trained checkpoint to start from.
+    # Optional: Specify layers to ignore/reinitialize if needed
+    # ignore_layers: ["speaker_embedding.weight", "decoder.output_layer.weight"]
+    ```
+-   **Read Framework Docs:** Consult the specific documentation of your chosen TTS framework to understand what each parameter in its configuration file does.
+-   **Term note:** In this config, a [checkpoint](../glossary.md#glossary-checkpoint) is a saved model snapshot, and the [sampling rate](../glossary.md#glossary-sampling-rate) must match your prepared dataset exactly.
+-   **Beginner trap to avoid:** change only the minimum required fields for your first run: dataset paths, output directory, sampling rate, batch size, and fine-tuning checkpoint settings if applicable. Do not tune ten unrelated settings before you confirm the pipeline works once.
+
+### 3. Hardware and Dataset Considerations
+
+-   **GPU VRAM:** [VRAM](../glossary.md#glossary-vram) is the memory on your graphics card. The `batch_size` is the primary knob to control GPU memory usage. Start with a recommended value (e.g., 16 or 32) and decrease it if you encounter "CUDA out of memory" errors during training startup. Larger batch sizes generally lead to faster convergence but require more VRAM.
+-   **Dataset Size vs. Epochs:**
+    *   **Small Datasets (< 20h):** May require fewer epochs (e.g., 300-1500) but need careful monitoring via [validation loss](../glossary.md#glossary-validation-loss) and samples to avoid [overfitting](../glossary.md#glossary-overfitting). Consider lower learning rates.
+    *   **Large Datasets (> 50h):** Can benefit from more epochs (1000+) to fully learn the patterns in the data.
+-   **CPU:** While the GPU does the heavy lifting, a decent multi-core CPU is needed for data loading and pre-processing, which can become a bottleneck otherwise.
+-   **Storage:** Ensure you have enough disk space for the dataset, the Python environment, the framework code, and especially the saved checkpoints, which can become large (hundreds of MBs to GBs per checkpoint).
+
+### 4. Monitoring Tools (TensorBoard)
+
+-   Most modern TTS frameworks integrate with [TensorBoard](https://www.tensorflow.org/tensorboard) for visualizing training progress.
+-   The configuration file often has settings related to logging (e.g., `use_tensorboard: True`, `log_directory`).
+-   During training, you can typically launch TensorBoard by running `tensorboard --logdir <YOUR_OUTPUT_DIRECTORY>` (e.g., `tensorboard --logdir ../checkpoints/my_yoruba_voice_run1`) in a separate terminal. This lets you monitor loss curves, learning rates, and often synthesized validation samples in your browser.
+-   If TensorBoard is empty, first check that your framework is actually writing event files to the output directory you expect. An empty dashboard is often just a wrong log path.
+
+---
+
+With your environment set up and configuration file tailored to your data and goals, you are now ready to start the actual model training process.
+
+## Before You Move On
+
+- [ ] Your Python environment is activated and framework dependencies install without errors.
+- [ ] `torch.cuda.is_available()` returns `True` if you intend to train on GPU.
+- [ ] `ffmpeg` and any required system libraries are installed and visible on your PATH.
+- [ ] Your config paths point to real manifest files, checkpoints, and output directories.
+- [ ] Your chosen sampling rate in the config matches the prepared dataset exactly.

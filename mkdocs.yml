@@ -1,0 +1,129 @@
+site_name: Universal TTS Guide
+site_description: Custom TTS dataset preparation, model training, fine-tuning, inference, packaging, and troubleshooting guide.
+site_url: https://actepukc.github.io/Universal-TTS-Guide/
+repo_url: https://github.com/AcTePuKc/Universal-TTS-Guide
+repo_name: AcTePuKc/Universal-TTS-Guide
+strict: true
+hooks:
+  - hooks.py
+not_in_nav: |
+  /404.md
+  /bg/index.md
+  /bg/glossary.md
+  /bg/licence.md
+  /bg/contributing-translations.md
+  /bg/guides/1-data-preparation.md
+  /bg/guides/2-training-setup.md
+  /bg/guides/3-model-training.md
+  /bg/guides/4-inference.md
+  /bg/guides/5-packaging-and-sharing.md
+  /bg/guides/6-troubleshooting-and-resources.md
+  /es/index.md
+  /es/glossary.md
+  /es/licence.md
+  /es/contributing-translations.md
+  /es/guides/1-data-preparation.md
+  /es/guides/2-training-setup.md
+  /es/guides/3-model-training.md
+  /es/guides/4-inference.md
+  /es/guides/5-packaging-and-sharing.md
+  /es/guides/6-troubleshooting-and-resources.md
+  /fr/index.md
+  /fr/glossary.md
+  /fr/licence.md
+  /fr/contributing-translations.md
+  /fr/guides/1-data-preparation.md
+  /fr/guides/2-training-setup.md
+  /fr/guides/3-model-training.md
+  /fr/guides/4-inference.md
+  /fr/guides/5-packaging-and-sharing.md
+  /fr/guides/6-troubleshooting-and-resources.md
+  /it/index.md
+  /it/glossary.md
+  /it/licence.md
+  /it/contributing-translations.md
+  /it/guides/1-data-preparation.md
+  /it/guides/2-training-setup.md
+  /it/guides/3-model-training.md
+  /it/guides/4-inference.md
+  /it/guides/5-packaging-and-sharing.md
+  /it/guides/6-troubleshooting-and-resources.md
+
+theme:
+  name: material
+  language: en
+  favicon: favicon.ico
+  palette:
+    - scheme: slate
+      primary: black
+      accent: green
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+    - scheme: default
+      primary: white
+      accent: green
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+  font:
+    text: IBM Plex Sans
+    code: JetBrains Mono
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tooltips
+
+nav:
+  - Home: index.md
+  - Guides:
+      - TTS Dataset Preparation: guides/1-data-preparation.md
+      - TTS Training Setup: guides/2-training-setup.md
+      - TTS Model Training and Fine-Tuning: guides/3-model-training.md
+      - TTS Inference: guides/4-inference.md
+      - TTS Model Packaging and Sharing: guides/5-packaging-and-sharing.md
+      - TTS Troubleshooting and Resources: guides/6-troubleshooting-and-resources.md
+  - Glossary: glossary.md
+  - Translation Guide: contributing-translations.md
+  - Licence: licence.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search
+
+extra_javascript:
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
+  - javascripts/site-navigation.js
+
+extra_css:
+  - stylesheets/extra.css
