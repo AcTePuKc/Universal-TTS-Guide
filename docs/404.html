@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="The requested Universal TTS Guide page could not be found.">
     <title>404 — Voice Not Found | Universal TTS Guide</title>
+    <base id="site-base" href="">
+    <script>
+      document.getElementById("site-base").href = window.location.protocol === "file:"
+        ? new URL(".", window.location.href).href
+        : "/Universal-TTS-Guide/";
+    </script>
     <link rel="icon" href="favicon.ico">
     <style>
       :root { color-scheme: dark; --bg: #020502; --panel: #071007; --green: #39ff14; --text: #d7ffd7; --muted: #8bb58b; }
