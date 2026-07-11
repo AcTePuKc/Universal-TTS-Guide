@@ -1,2 +1,4 @@
-# [Licenza](../licence.md)
+# Licenza
+
+[Visualizza i termini completi della licenza](../licence.md)
 Il contenuto di questa guida è rilasciato sotto licenza [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). Sei libero di condividere e adattare il materiale a condizione di fornire un'attribuzione appropriata. Il contenuto è inoltre protetto dal copyright 2025 di AcTePuKc e qualsiasi nuovo contributo sarà soggetto alla stessa licenza.

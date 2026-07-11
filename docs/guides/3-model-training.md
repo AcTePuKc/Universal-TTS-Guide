@@ -306,7 +306,7 @@ model = model.float()  # If not using mixed precision
 
    ```python
    # Add to your training code
-   from torch.profiler import profile, record_function
+   from torch.profiler import ProfilerActivity, profile, record_function
    with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:
        with record_function("model_inference"):
            # Your forward pass
