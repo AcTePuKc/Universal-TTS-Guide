@@ -1,0 +1,16 @@
+# Ignore common clutter
+.DS_Store
+Thumbs.db
+node_modules/
+dist/
+.plans/
+.venv/
+venv/
+site/
+__pycache__/
+*.log
+*.tmp
+*.bak
+.env
+
+_test*

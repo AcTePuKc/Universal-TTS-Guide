@@ -1,10 +1,14 @@
 ---
 # You can add optional metadata here if your layout uses it
 layout: default # Or whatever layout your theme uses for simple pages
+lang: en
 title: License
+description: License terms for the Universal TTS Guide documentation.
 ---
 
-[Main README]({{ site.baseurl }}/) 
+<a id="top"></a>
+
+[Back to start]({{ '/README.html' | relative_url }})
 {: .btn .btn-primary}
 
 --- 
