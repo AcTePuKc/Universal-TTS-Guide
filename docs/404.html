@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The requested Universal TTS Guide page could not be found.">
+    <title>404 — Voice Not Found | Universal TTS Guide</title>
+    <base id="site-base" href="">
+    <script>
+      document.getElementById("site-base").href = window.location.protocol === "file:"
+        ? new URL(".", window.location.href).href
+        : "/Universal-TTS-Guide/";
+    </script>
+    <link rel="icon" href="favicon.ico">
+    <style>
+      :root { color-scheme: dark; --bg: #020502; --panel: #071007; --green: #39ff14; --text: #d7ffd7; --muted: #8bb58b; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 2rem; background: radial-gradient(circle at top, #0b210b 0, var(--bg) 55%); color: var(--text); font: 16px/1.6 system-ui, sans-serif; }
+      main { width: min(42rem, 100%); padding: 2.5rem; border: 1px solid #1d611d; border-radius: 1rem; background: color-mix(in srgb, var(--panel) 92%, transparent); box-shadow: 0 0 2rem #39ff1422; }
+      .code { margin: 0; color: var(--green); font: 700 5rem/1 monospace; letter-spacing: .08em; text-shadow: 0 0 1rem #39ff1488; }
+      h1 { margin: .5rem 0 1rem; color: var(--green); font-size: 2rem; }
+      p { margin: .8rem 0; }
+      .muted { color: var(--muted); }
+      nav { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.5rem 0; }
+      a { display: inline-block; padding: .5rem .8rem; border: 1px solid #258025; border-radius: .45rem; color: var(--green); text-decoration: none; }
+      a:hover, a:focus { background: #39ff141a; border-color: var(--green); }
+      footer { margin-top: 2rem; color: var(--muted); font-size: .9rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>Voice Not Found</h1>
+      <p>The page you requested seems to have wandered off between dataset preparation and inference.</p>
+      <p class="muted">No usable signal was found here, but the rest of the guide is still online.</p>
+      <nav aria-label="Useful destinations">
+        <a href="./">Home</a>
+        <a href="guides/1-data-preparation/">Start with Guide 1</a>
+        <a href="bg/">Български</a>
+        <a href="es/">Español</a>
+        <a href="fr/">Français</a>
+        <a href="it/">Italiano</a>
+      </nav>
+      <footer>No model was harmed while searching for this page.</footer>
+    </main>
+  </body>
+</html>
